@@ -1,5 +1,14 @@
 # ksxing docker 部署框架
 **flask + gunicorn  + mysql + mongo + memcached + nginx** WITH `docker-compose`
+## 在部署前的一些准备
+
+```bash
+hub clone ksxAppSkeleton
+cd ksxAppSkeleton/ksxing
+git clone xxxxx #  clone ksxing web code from  repo
+cd ..
+docker-compose up
+```
 
 ### compose部署文件样例参考:
 
