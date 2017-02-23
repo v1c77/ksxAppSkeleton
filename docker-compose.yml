@@ -1,0 +1,49 @@
+web:
+  restart: always
+  build: ./ksxing
+  expose:
+    - "8888"
+  links:
+    - mysql:mysql
+    - mongo:mongo
+    - memcached:memcached
+  volumes:
+    - ./ksxing/log:/ksxing/log
+  command: gunicorn -c gunicorn.conf app:app  -t 6000 --error-logfile /ksxing/log/gun.log --log-level info
+
+nginx:
+  restart: always
+  build: ./nginx/
+  ports:
+    - "80:80"
+  volumes:
+    - /www/static
+    - ./nginx/log:/nginx/logs
+  volumes_from:
+    - web
+  links:
+    - web:web
+
+mysql:
+  restart: always
+  image: mysql:5.6.31
+  ports:
+    - "3306:3306"
+  environment:
+    MYSQL_ROOT_PASSWORD: password
+  volumes:
+    - ./mysql/mysqldata:/var/lib/mysql
+
+mongo:
+  restart: always
+  image: mongo:3.0.1
+  ports:
+    - "27017:27017"
+  volumes:
+    - ./mongo/mongodata:/data/db
+
+memcached:
+  restart: always
+  image: memcached:1.4.22
+  ports:
+    - "11211:11211"
